@@ -165,6 +165,35 @@ vim.opt.confirm = true
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+vim.keymap.set('n', 'H', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'L', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>x', function()
+  -- Get current buffer number
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  -- Get list of all buffers
+  local buffers = vim.api.nvim_list_bufs()
+
+  -- Filter out non-loaded buffers and the current one
+  local valid_buffers = {}
+  for _, buf in ipairs(buffers) do
+    if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+      table.insert(valid_buffers, buf)
+    end
+  end
+
+  -- Switch to another buffer if available, or create a new one
+  if #valid_buffers > 0 then
+    vim.api.nvim_set_current_buf(valid_buffers[1])
+  else
+    vim.cmd 'enew' -- Create a new empty buffer
+  end
+
+  -- Now delete the original buffer
+  vim.cmd('bdelete ' .. current_buf)
+end, { noremap = true, silent = true, desc = 'Close buffer without closing window' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -249,21 +278,25 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        mode = 'buffers',
+        offsets = {
+          {
+            filetype = 'NvimTree',
+            text = 'File Explorer',
+            text_align = 'center',
+            separator = true,
+          },
+        },
+      },
+    },
+  },
 
-  -- Alternatively, use `config = function() ... end` for full control over the configuration.
-  -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
-  --
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`.
-  --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -521,6 +554,9 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+
+      -- Existing configuration code
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -683,6 +719,18 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        ts_ls = {
+          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
+                languages = { 'vue' },
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },
@@ -730,6 +778,7 @@ require('lazy').setup({
         'yamlls',
         'emmet_ls',
         'bashls',
+        'eslint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -784,7 +833,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         php = { 'pint' },
         blade = { 'blade-formatter' },
-        vue = { 'eslint' },
+        -- vue = { 'eslint' },
 
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
@@ -923,7 +972,6 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
-        transparent = true,
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
@@ -1023,6 +1071,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
+
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!

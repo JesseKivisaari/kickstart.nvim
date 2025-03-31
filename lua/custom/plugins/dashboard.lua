@@ -49,7 +49,7 @@ return {
             icon_hl = 'Title',
             desc = 'Find File  ',
             desc_hl = 'String',
-            key = 'f',
+            key = 'sf',
             key_hl = 'Number',
             action = 'Telescope find_files',
           },
