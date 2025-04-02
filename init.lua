@@ -718,6 +718,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+
         ts_ls = {
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
           init_options = {
@@ -726,6 +727,18 @@ require('lazy').setup({
                 name = '@vue/typescript-plugin',
                 location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
                 languages = { 'vue' },
+              },
+            },
+          },
+          settings = {
+            typescript = {
+              format = {
+                enable = false, -- Disable formatting
+              },
+              vuePatterns = {
+                format = {
+                  enable = false, -- Specifically disable formatting for Vue
+                },
               },
             },
           },
@@ -768,7 +781,6 @@ require('lazy').setup({
         'jsonls',
         'lua_ls',
         'vimls',
-        'ts_ls',
         'pyright',
         'rust_analyzer',
         'gopls',
@@ -777,6 +789,8 @@ require('lazy').setup({
         'yamlls',
         'emmet_ls',
         'bashls',
+        'vtsls',
+        'ts_ls',
         'eslint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -832,7 +846,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         php = { 'pint' },
         blade = { 'blade-formatter' },
-        -- vue = { 'eslint' },
+        vue = { 'prettier' },
 
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
