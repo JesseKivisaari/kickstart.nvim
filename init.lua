@@ -613,9 +613,11 @@ require('lazy').setup({
         -- If you're noticing high CPU usage or stuttering when opening the
         -- documentation, you may try setting
         -- `completion.documentation.treesitter_highlighting = false`.
+        menu = { border = 'single' },
         documentation = {
           auto_show = true,
           auto_show_delay_ms = 200,
+          window = { border = 'single' },
         },
       },
 
@@ -694,7 +696,12 @@ require('lazy').setup({
       snippets = { preset = 'luasnip' },
       -- See :h blink-cmp-config-fuzzy for more information
       fuzzy = { implementation = 'lua' },
-      signature = { enabled = true },
+      signature = {
+        window = {
+          border = 'single',
+        },
+        enabled = true,
+      },
     },
   },
 
