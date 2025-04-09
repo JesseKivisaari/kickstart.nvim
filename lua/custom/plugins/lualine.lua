@@ -150,23 +150,35 @@ return {
         lualine_x = {
           { copilot_status },
           -- Noice status (uncomment if you have noice.nvim)
-          -- {
-          --   function() return require("noice").api.status.command.get() end,
-          --   cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-          --   color = { fg = "#bb9af7" },
-          -- },
-          -- {
-          --   function() return require("noice").api.status.mode.get() end,
-          --   cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-          --   color = { fg = "#ff9e64" },
-          -- },
+          {
+            function()
+              return require('noice').api.status.command.get()
+            end,
+            cond = function()
+              return package.loaded['noice'] and require('noice').api.status.command.has()
+            end,
+            color = { fg = '#bb9af7' },
+          },
+          {
+            function()
+              return require('noice').api.status.mode.get()
+            end,
+            cond = function()
+              return package.loaded['noice'] and require('noice').api.status.mode.has()
+            end,
+            color = { fg = '#ff9e64' },
+          },
 
           -- DAP status (uncomment if you use DAP)
-          -- {
-          --   function() return "  " .. require("dap").status() end,
-          --   cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-          --   color = { fg = "#e0af68" },
-          -- },
+          {
+            function()
+              return '  ' .. require('dap').status()
+            end,
+            cond = function()
+              return package.loaded['dap'] and require('dap').status() ~= ''
+            end,
+            color = { fg = '#e0af68' },
+          },
 
           -- Lazy updates
           {

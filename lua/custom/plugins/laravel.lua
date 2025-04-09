@@ -13,6 +13,10 @@ return {
     { '<leader>lm', ':Laravel related<cr>' },
   },
   event = { 'VeryLazy' },
-  opts = {},
+  opts = {
+    opts = {
+      lsp_server = 'intelephense',
+    },
+  },
   config = true,
 }
