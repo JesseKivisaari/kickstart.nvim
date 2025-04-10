@@ -50,8 +50,8 @@ vim.opt.confirm = true
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- vim.keymap.set('n', 'H', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', 'L', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'H', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'L', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<leader>x', function()
   -- Get current buffer number
@@ -138,16 +138,24 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
-  -- {
-  --   'akinsho/bufferline.nvim',
-  --   version = '*',
-  --   dependencies = { 'nvim-tree/nvim-web-devicons' },
-  --   opts = {
-  --     options = {
-  --       mode = 'buffers',
-  --     },
-  --   },
-  -- },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        mode = 'buffers',
+        offsets = {
+          {
+            filetype = 'neo-tree',
+            text = 'Nvim Tree',
+            separator = true,
+            text_align = 'left',
+          },
+        },
+      },
+    },
+  },
 
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -527,6 +535,16 @@ require('lazy').setup({
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+
+            -- Auto fix ESLint issues on save
+            if server_name == 'eslint' then
+              vim.api.nvim_create_autocmd('BufWritePre', {
+                pattern = { '*.js', '*.ts', '*.jsx', '*.tsx', '*.vue' },
+                callback = function()
+                  vim.cmd 'EslintFixAll'
+                end,
+              })
+            end
           end,
         },
       }
@@ -712,17 +730,17 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
-        transparent = true,
+        -- transparent = true,
 
         styles = {
-          sidebars = 'transparent',
-          floats = 'transparent',
+          -- sidebars = 'transparent',
+          -- floats = 'transparent',
 
           comments = { italic = false }, -- Disable italics in comments
         },
       }
 
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
 
