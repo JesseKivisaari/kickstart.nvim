@@ -133,11 +133,39 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  checker = {
+    enabled = true, -- check for plugin updates periodically
+    notify = false,
+  },
+  defaults = {
+    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    lazy = true,
+    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+    -- have outdated releases, which may break your Neovim install.
+    version = false, -- always use the latest git commit
+    -- version = "*", -- try installing the latest stable version for plugins that support semver
+  },
 
+  performance = {
+    rtp = {
+      -- disable some rtp plugins
+      disabled_plugins = {
+        'gzip',
+        -- "matchit",
+        -- "matchparen",
+        -- "netrwPlugin",
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+        'phpactor',
+      },
+    },
+  },
+
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
     'akinsho/bufferline.nvim',
     version = '*',
@@ -158,18 +186,18 @@ require('lazy').setup({
   },
 
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --   },
+  -- },
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -224,7 +252,7 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
   },
@@ -523,6 +551,7 @@ require('lazy').setup({
         'vtsls',
         'ts_ls',
         'eslint',
+        'blade-formatter',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -730,11 +759,11 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
-        -- transparent = true,
+        transparent = true,
 
         styles = {
-          -- sidebars = 'transparent',
-          -- floats = 'transparent',
+          sidebars = 'transparent',
+          floats = 'transparent',
 
           comments = { italic = false }, -- Disable italics in comments
         },
@@ -751,11 +780,11 @@ require('lazy').setup({
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
-      -- local statusline = require 'mini.statusline'
-      -- statusline.setup { use_icons = vim.g.have_nerd_font }
-      -- statusline.section_location = function()
-      --   return '%2l:%-2v'
-      -- end
+      local statusline = require 'mini.statusline'
+      statusline.setup { use_icons = vim.g.have_nerd_font }
+      statusline.section_location = function()
+        return '%2l:%-2v'
+      end
     end,
   },
   { -- Highlight, edit, and navigate code
@@ -775,13 +804,7 @@ require('lazy').setup({
     },
   },
 
-  require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
-  require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
-  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymap
-
+  { import = 'kickstart.plugins' },
   { import = 'custom.plugins' },
 }, {
   ui = {
