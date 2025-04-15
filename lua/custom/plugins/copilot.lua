@@ -2,7 +2,7 @@ return {
   {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
-    event = 'InsertEnter',
+    event = 'BufReadPost',
     config = function()
       require('copilot').setup {
         suggestion = { enabled = false },
