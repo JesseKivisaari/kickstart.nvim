@@ -1,4 +1,10 @@
 local M = {}
+M.diagnostics = {
+  Error = ' ',
+  Warn = ' ',
+  Hint = ' ',
+  Info = ' ',
+}
 
 M.kind = {
   Array = ' ',

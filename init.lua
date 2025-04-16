@@ -121,21 +121,41 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
     'akinsho/bufferline.nvim',
+    event = 'VeryLazy',
     version = '*',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       options = {
+        diagnostics = 'nvim_lsp',
+        always_show_bufferline = false,
         mode = 'buffers',
+        diagnostics_indicator = function(_, _, diag)
+          local icons = require 'utils.icons'
+          local ret = (diag.error and icons.diagnostics.Error .. diag.error .. ' ' or '') .. (diag.warning and icons.diagnostics.Warn .. diag.warning or '')
+          return vim.trim(ret)
+        end,
         offsets = {
           {
             filetype = 'neo-tree',
             text = 'Nvim Tree',
             separator = true,
+            highlight = 'Directory',
             text_align = 'left',
           },
         },
       },
     },
+    config = function(_, opts)
+      require('bufferline').setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd({ 'BufAdd', 'BufDelete' }, {
+        callback = function()
+          vim.schedule(function()
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
+    end,
   },
 
   {
@@ -607,10 +627,10 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
-        -- transparent = true,
+        transparent = true,
         styles = {
-          -- sidebars = 'transparent',
-          -- floats = 'transparent',
+          sidebars = 'transparent',
+          floats = 'transparent',
           comments = { italic = false }, -- Disable italics in comments
         },
       }
