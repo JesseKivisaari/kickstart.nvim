@@ -13,8 +13,12 @@ return {
   },
   event = { 'VeryLazy' },
   opts = {
-    opts = {
-      lsp_server = 'intelephense',
+    lsp_server = 'intelephense',
+    features = {
+      pickers = {
+        enable = true,
+        provider = 'snacks',
+      },
     },
   },
   config = true,

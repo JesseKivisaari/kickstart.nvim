@@ -29,8 +29,8 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
--- vim.keymap.set('n', 'H', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', 'L', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'H', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'L', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<leader>x', function()
   local current_buf = vim.api.nvim_get_current_buf()
@@ -119,24 +119,24 @@ require('lazy').setup({
   },
 
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  -- {
-  --   'akinsho/bufferline.nvim',
-  --   version = '*',
-  --   dependencies = { 'nvim-tree/nvim-web-devicons' },
-  --   opts = {
-  --     options = {
-  --       mode = 'buffers',
-  --       offsets = {
-  --         {
-  --           filetype = 'neo-tree',
-  --           text = 'Nvim Tree',
-  --           separator = true,
-  --           text_align = 'left',
-  --         },
-  --       },
-  --     },
-  --   },
-  -- },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        mode = 'buffers',
+        offsets = {
+          {
+            filetype = 'neo-tree',
+            text = 'Nvim Tree',
+            separator = true,
+            text_align = 'left',
+          },
+        },
+      },
+    },
+  },
 
   {
     'folke/which-key.nvim',
@@ -203,7 +203,6 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -338,15 +337,11 @@ require('lazy').setup({
             },
           },
         },
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
+        pyright = {},
+        rust_analyzer = {},
         templ = {},
         ts_ls = {
-          filetypes = { 'vue', 'typescriptreact', 'javascriptreact' },
+          filetypes = { 'vue' },
           init_options = {
             plugins = {
               {
@@ -371,16 +366,11 @@ require('lazy').setup({
         },
 
         lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
                 callSnippet = 'Replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -442,16 +432,16 @@ require('lazy').setup({
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
+    -- keys = {
+    --   {
+    --     '<leader>f',
+    --     function()
+    --       require('conform').format { async = true, lsp_format = 'fallback' }
+    --     end,
+    --     mode = '',
+    --     desc = '[F]ormat buffer',
+    --   },
+    -- },
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -482,7 +472,6 @@ require('lazy').setup({
 
   { -- Autocompletion
     'saghen/blink.cmp',
-    event = 'VimEnter',
     version = '1.*',
     dependencies = {
       dependencies = {
@@ -619,15 +608,12 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
         -- transparent = true,
-
         styles = {
           -- sidebars = 'transparent',
           -- floats = 'transparent',
-
           comments = { italic = false }, -- Disable italics in comments
         },
       }
-
       vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
@@ -658,6 +644,7 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    event = 'VeryLazy',
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
@@ -665,6 +652,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    event = 'VeryLazy',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`

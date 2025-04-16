@@ -71,7 +71,7 @@ local icons = {
 local function copilot_status()
   local clients = vim.lsp.get_clients { name = 'copilot', bufnr = 0 }
   if #clients > 0 then
-    local status = require('copilot.api').status.data.status
+    local status = require('copilot.status').data.status
     return (status == 'InProgress' and icons.kinds.Copilot .. ' pending') or (status == 'Warning' and icons.kinds.Copilot .. ' error') or icons.kinds.Copilot
   end
   return ''
@@ -79,6 +79,7 @@ end
 
 return {
   'nvim-lualine/lualine.nvim',
+  event = 'VeryLazy',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function()
     local lualine = require 'lualine'

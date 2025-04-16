@@ -5,9 +5,6 @@ return {
   opts = {
     dashboard = {
       example = 'doom',
-      -- your dashboard configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
     },
     indent = { enabled = true },
     input = { enabled = true },
@@ -77,15 +74,15 @@ return {
       end,
       desc = 'Notification History',
     },
+    -- {
+    --   '<leader>e',
+    --   function()
+    --     Snacks.explorer()
+    --   end,
+    --   desc = 'File Explorer',
+    -- },
     {
-      '<leader>e',
-      function()
-        Snacks.explorer()
-      end,
-      desc = 'File Explorer',
-    },
-    -- find
-    {
+
       '<leader>fb',
       function()
         Snacks.picker.buffers()
@@ -100,7 +97,7 @@ return {
       desc = 'Find Config File',
     },
     {
-      '<leader>ff',
+      '<leader>sf',
       function()
         Snacks.picker.files()
       end,
@@ -228,13 +225,6 @@ return {
         Snacks.picker.autocmds()
       end,
       desc = 'Autocmds',
-    },
-    {
-      '<leader>sb',
-      function()
-        Snacks.picker.lines()
-      end,
-      desc = 'Buffer Lines',
     },
     {
       '<leader>sc',
