@@ -7,7 +7,7 @@ return {
     opts = {
       exclude = {
         filetypes = {
-          'dashboard',
+          'snacks_dashboard',
         },
       },
     },
