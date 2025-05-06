@@ -245,8 +245,63 @@ return {
         pyright = {},
         rust_analyzer = {},
         templ = {},
+        volar = {
+          init_options = {
+            vue = {
+              hybridMode = false,
+            },
+          },
+          settings = {
+            typescript = {
+              inlayHints = {
+                enumMemberValues = {
+                  enabled = true,
+                },
+                functionLikeReturnTypes = {
+                  enabled = true,
+                },
+                propertyDeclarationTypes = {
+                  enabled = true,
+                },
+                parameterTypes = {
+                  enabled = true,
+                  suppressWhenArgumentMatchesName = true,
+                },
+                variableTypes = {
+                  enabled = true,
+                },
+              },
+            },
+          },
+        },
+
         ts_ls = {
-          filetypes = { 'vue' },
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+            'vue',
+          },
+          settings = {
+            complete_function_calls = true,
+            typescript = {
+              updateImportsOnFileMove = { enabled = 'always' },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = 'literals' },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+            },
+          },
           init_options = {
             plugins = {
               {
@@ -256,19 +311,88 @@ return {
               },
             },
           },
-          settings = {
-            typescript = {
-              format = {
-                enable = false, -- Disable formatting
-              },
-              vuePatterns = {
-                format = {
-                  enable = false, -- Specifically disable formatting for Vue
-                },
-              },
-            },
-          },
         },
+        -- vtsls = {
+        --   -- explicitly add default filetypes, so that we can extend
+        --   -- them in related extras
+        --   filetypes = {
+        --     'javascript',
+        --     'javascriptreact',
+        --     'javascript.jsx',
+        --     'typescript',
+        --     'typescriptreact',
+        --     'typescript.tsx',
+        --     'vue',
+        --   },
+        --   settings = {
+        --     complete_function_calls = true,
+        --     vtsls = {
+        --       enableMoveToFileCodeAction = true,
+        --       autoUseWorkspaceTsdk = true,
+        --       experimental = {
+        --         maxInlayHintLength = 30,
+        --         completion = {
+        --           enableServerSideFuzzyMatch = true,
+        --         },
+        --       },
+        --       tsserver = {
+        --         globalPlugins = {
+        --           {
+        --             name = '@vue/typescript-plugin',
+        --             location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
+        --             languages = { 'vue' },
+        --             configNamespace = 'typescript',
+        --             enableForWorkspaceTypeScriptVersions = true,
+        --           },
+        --         },
+        --       },
+        --     },
+        --     typescript = {
+        --       updateImportsOnFileMove = { enabled = 'always' },
+        --       suggest = {
+        --         completeFunctionCalls = true,
+        --       },
+        --       inlayHints = {
+        --         enumMemberValues = { enabled = true },
+        --         functionLikeReturnTypes = { enabled = true },
+        --         parameterNames = { enabled = 'literals' },
+        --         parameterTypes = { enabled = true },
+        --         propertyDeclarationTypes = { enabled = true },
+        --         variableTypes = { enabled = false },
+        --       },
+        --     },
+        --   },
+        --   setup = {
+        --     --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
+        --     --- the proper approach is to check the nvim-lspconfig release version when it's released to determine the server name dynamically
+        --     tsserver = function()
+        --       -- disable tsserver
+        --       return true
+        --     end,
+        --     ts_ls = function()
+        --       -- disable tsserver
+        --       return true
+        --     end,
+        --     gopls = function(_, opts)
+        --       local on_attach = function(client, bufnr)
+        --         -- workaround for gopls missing semanticTokensProvider
+        --         if not client.server_capabilities.semanticTokensProvider then
+        --           local semantic = client.config.capabilities.textDocument.semanticTokens
+        --           client.server_capabilities.semanticTokensProvider = {
+        --             full = true,
+        --             legend = {
+        --               tokenTypes = semantic.tokenTypes,
+        --               tokenModifiers = semantic.tokenModifiers,
+        --             },
+        --             range = true,
+        --           }
+        --         end
+        --       end
+        --
+        --       opts.on_attach = on_attach
+        --     end,
+        --   },
+        -- },
 
         lua_ls = {
           settings = {
@@ -296,8 +420,6 @@ return {
         'yamlls',
         'emmet_ls',
         'bashls',
-        'vtsls',
-        'ts_ls',
         'eslint',
         'blade-formatter',
         'gomodifytags',
@@ -410,10 +532,6 @@ return {
     --- @type blink.cmp.Config
     opts = {
       completion = {
-        -- Show documentation when available, with a small delay.
-        -- If you're noticing high CPU usage or stuttering when opening the
-        -- documentation, you may try setting
-        -- `completion.documentation.treesitter_highlighting = false`.
         menu = { border = 'single' },
         documentation = {
           auto_show = true,
@@ -495,7 +613,6 @@ return {
       },
 
       snippets = { preset = 'luasnip' },
-      -- See :h blink-cmp-config-fuzzy for more information
       fuzzy = { implementation = 'lua' },
       signature = {
         window = {
@@ -516,34 +633,12 @@ return {
         styles = {
           -- sidebars = 'transparent',
           -- floats = 'transparent',
-          comments = { italic = false }, -- Disable italics in comments
+          comments = { italic = false },
         },
       }
       vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
-
-  -- {
-  --   'rebelot/kanagawa.nvim',
-  --   prioority = 1000,
-  --   config = function()
-  --     require('kanagawa').setup {
-  --       compile = false, -- enable compiling the colorscheme
-  --       undercurl = true, -- enable undercurls
-  --       commentStyle = { italic = true },
-  --       functionStyle = {},
-  --       keywordStyle = { italic = true },
-  --       statementStyle = { bold = true },
-  --       typeStyle = {},
-  --       transparent = false, -- do not set background color
-  --       dimInactive = false, -- dim inactive window `:h hl-NormalNC`
-  --       terminalColors = true, -- define vim.g.terminal_color_{0,17}
-  --       theme = 'wave',
-  --     }
-  --
-  --     vim.cmd 'colorscheme kanagawa'
-  --   end,
-  -- },
 
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -553,6 +648,7 @@ return {
     config = function()
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
+      require('mini.statusline').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
