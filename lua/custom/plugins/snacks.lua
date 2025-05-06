@@ -347,50 +347,50 @@ return {
     },
     -- LSP
     {
-      'gd',
+      'grd',
       function()
         Snacks.picker.lsp_definitions()
       end,
-      desc = 'Goto Definition',
+      desc = '[G]oto [D]efinition',
     },
+    -- {
+    --   'grD',
+    --   function()
+    --     Snacks.picker.lsp_declarations()
+    --   end,
+    --   desc = '[G]oto [D]eclaration',
+    -- },
     {
-      'gD',
-      function()
-        Snacks.picker.lsp_declarations()
-      end,
-      desc = 'Goto Declaration',
-    },
-    {
-      'gr',
+      'grr',
       function()
         Snacks.picker.lsp_references()
       end,
       nowait = true,
-      desc = 'References',
+      desc = '[G]o to [R]eferences',
     },
     {
-      'gI',
+      'gri',
       function()
         Snacks.picker.lsp_implementations()
       end,
-      desc = 'Goto Implementation',
+      desc = '[G]oto [I]mplementation',
     },
     {
-      'gy',
+      'grt',
       function()
         Snacks.picker.lsp_type_definitions()
       end,
-      desc = 'Goto T[y]pe Definition',
+      desc = '[G]oto T[y]pe [D]efinition',
     },
     {
-      '<leader>ss',
+      'gO',
       function()
         Snacks.picker.lsp_symbols()
       end,
       desc = 'LSP Symbols',
     },
     {
-      '<leader>sS',
+      'gW',
       function()
         Snacks.picker.lsp_workspace_symbols()
       end,
